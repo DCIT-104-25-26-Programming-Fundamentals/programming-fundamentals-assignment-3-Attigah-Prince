@@ -68,5 +68,127 @@
 // YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in
 // =============================================================================
 
-const readlineSync = require('readline-sync');
 
+const readlineSync = require("readline-sync");
+
+function readMatrix(label) {
+  const rows = readlineSync.questionInt(`Enter number of rows${label}: `);
+  const cols = readlineSync.questionInt(`Enter number of columns${label}: `);
+  const matrix = [];
+
+  for (let i = 0; i < rows; i++) {
+    const line = readlineSync.question(`Enter row ${i + 1}: `);
+    const row = line.split(" ").map(Number);
+    matrix.push(row);
+  }
+
+  return matrix;
+}
+
+function printMatrix(matrix) {
+  for (let i = 0; i < matrix.length; i++) {
+    console.log(matrix[i].join("  "));
+  }
+}
+
+function transposeMatrix(matrix) {
+  const rows = matrix.length;
+  const cols = matrix[0].length;
+  const result = [];
+
+  for (let j = 0; j < cols; j++) {
+    const newRow = [];
+    for (let i = 0; i < rows; i++) {
+      newRow.push(matrix[i][j]);
+    }
+    result.push(newRow);
+  }
+
+  return result;
+}
+
+function addMatrices(a, b) {
+  const rows = a.length;
+  const cols = a[0].length;
+  const result = [];
+
+  for (let i = 0; i < rows; i++) {
+    const newRow = [];
+    for (let j = 0; j < cols; j++) {
+      newRow.push(a[i][j] + b[i][j]);
+    }
+    result.push(newRow);
+  }
+
+  return result;
+}
+
+function multiplyMatrices(a, b) {
+  const rowsA = a.length;
+  const colsA = a[0].length;
+  const colsB = b[0].length;
+  const result = [];
+
+  for (let i = 0; i < rowsA; i++) {
+    const newRow = [];
+    for (let j = 0; j < colsB; j++) {
+      let sum = 0;
+      for (let k = 0; k < colsA; k++) {
+        sum += a[i][k] * b[k][j];
+      }
+      newRow.push(sum);
+    }
+    result.push(newRow);
+  }
+
+  return result;
+}
+
+function main() {
+  console.log("Matrix Operations");
+  console.log("A - Transpose a Matrix");
+  console.log("B - Add Two Matrices");
+  console.log("C - Multiply Two Matrices");
+  const choice = readlineSync.question("Choose an operation (A/B/C): ").trim().toUpperCase();
+
+  if (choice === "A") {
+    const matrix = readMatrix("");
+    console.log("\nOriginal Matrix:");
+    printMatrix(matrix);
+    console.log("\nTransposed Matrix:");
+    printMatrix(transposeMatrix(matrix));
+
+  } else if (choice === "B") {
+    console.log("\nMatrix A:");
+    const a = readMatrix(" for Matrix A");
+    console.log("\nMatrix B:");
+    const b = readMatrix(" for Matrix B");
+
+    if (a.length !== b.length || a[0].length !== b[0].length) {
+      console.log("Error: Matrices must be the same size to add.");
+      return;
+    }
+
+    console.log("\nResult (A + B):");
+    printMatrix(addMatrices(a, b));
+
+  } else if (choice === "C") {
+    console.log("\nMatrix A:");
+    const a = readMatrix(" for Matrix A");
+    console.log("\nMatrix B:");
+    const b = readMatrix(" for Matrix B");
+
+    if (a[0].length !== b.length) {
+      console.log("Error: Number of columns in A must equal number of rows in B.");
+      return;
+    }
+
+    console.log("\nResult (A x B):");
+    printMatrix(multiplyMatrices(a, b));
+
+  } else {
+    console.log("Error: Invalid choice. Please enter A, B, or C.");
+  }
+}
+
+main();
